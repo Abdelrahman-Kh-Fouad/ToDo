@@ -1,0 +1,40 @@
+
+version: "3"
+
+services: 
+
+    
+  mongo:
+    image: mongo
+    hostname: database 
+    volumes: 
+      - ./database:/db
+    container_name: database
+    ports:
+      - "27017:27017"
+
+  back:
+    build: ./back
+    hostname: back
+    ports:
+      - "5000:5000"
+    volumes: 
+      - ./back:/back
+    container_name: back
+
+    depends_on: 
+      - mongo
+
+  front:
+    build: ./front/front-end
+    volumes: 
+      - ./front/front-end:/front
+    container_name: front
+    ports: 
+      - "8080:8080"
+    depends_on: 
+      - back
+
+  # volumes:
+  # mongo-data:
+  #   driver: local
