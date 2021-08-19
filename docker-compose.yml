@@ -26,9 +26,9 @@ services:
       - mongo
 
   front:
-    build: ./front/front-end
+    build: ./front
     volumes: 
-      - ./front/front-end:/front
+      - ./front:/front
     container_name: front
     ports: 
       - "8080:8080"
