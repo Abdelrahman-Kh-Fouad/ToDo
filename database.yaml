@@ -1,0 +1,45 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database
+  labels:
+    name: database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: database
+  template:
+    metadata:
+      labels:
+        service: database
+    spec:
+      containers:
+      - name: database
+        image: mongo
+        imagePullPolicy: IfNotPresent
+        
+        volumeMounts:
+          - name: mongo-volume-mount
+            mountPath: /var/lib/mongo/data
+
+      volumes:
+      - name: mongo-volume-mount
+        persistentVolumeClaim:
+          claimName: mongo-pvc
+      restartPolicy: Always
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: database
+  labels:
+    service: database
+spec:
+  selector:
+    service: database
+  type: ClusterIP
+  ports:
+  - port: 27017

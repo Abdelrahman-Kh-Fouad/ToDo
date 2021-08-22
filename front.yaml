@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front
+  labels:
+    name: front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: front
+  template:
+    metadata:
+      labels:
+        app: front
+    spec:
+      containers:
+      - name: front
+        image: abdelrahmankh/front
+        imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: front
+  labels:
+    service: front
+spec:
+  selector:
+    app: front
+  ports:
+  - port: 8080
+    targetPort: 8080
