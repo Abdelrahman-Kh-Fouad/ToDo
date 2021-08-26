@@ -14,7 +14,7 @@ class DataBase:
         # # client = pymongo.MongoClient('localhost', MONGO_PORT)
 
         self.mongoCluster = MongoClient("mongodb://database:27017/")
-        print(self.mongoCluster.list_database_names())
+        #print(self.mongoCluster.list_database_names())
 
         self.mongoDB = self.mongoCluster["testingdb"]
         self.mongoCollection = self.mongoDB["todo"]

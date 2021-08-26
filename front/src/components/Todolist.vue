@@ -1,7 +1,5 @@
 <template>
 
-
-
      <div class="row mx-1 px-5 pb-3 w-80" >
             <div class="col mx-auto">
                     <!-- Todo Items -->
@@ -41,8 +39,8 @@ export default {
     return {
 
         deleteItem : function(_id){
-            axios.get(this.$root.Url +'/del/'+_id); 
-            this.$root.refresh()
+            axios.delete(this.$root.Url +'/todo/'+_id); 
+            this.$root.refresh();
         }
     }
 },

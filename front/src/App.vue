@@ -69,37 +69,44 @@ export default {
   },
    data () {
       return {
-          list : [],
-         currentTodo :"",
-          Url: 'http://127.0.0.1:5000', 
-          idForTodo:''
+            list : [],
+            currentTodo :"",
+            Url: 'http://127.0.0.1:5000', 
+            idForTodo:''
       }
     },
-  methods: {
-    AddNewOne:function() {
-       console.log(this.currentTodo);
-        axios.post(this.Url+'/pro', {
-            action : 'Add',
-            text:this.currentTodo,
-          }
-          )
-          .then(response => {
-          console.log(response);
-          })
-          .catch(err =>{
-          console.log(err);
-          });
 
-      this.currentTodo='';
-      this.refresh();
-        
-    },
-
-    refresh:function(){
-       axios.get(this.Url + '/data', )
-           .then(response => (this.list = response.data))
+     created: function () {
+        //this.refresh(); 
     }
+    ,
+  methods: {
+       refresh:function(){
+            axios.get(this.Url + '/todo/', )
+            .then(response => (this.list = response.data));
+            
+            console.log(this.list);
+  
+        },
 
+        AddNewOne:function() {
+            console.log(this.currentTodo);
+            if(this.currentTodo=='')
+                return;
+            axios.post(this.Url+'/todo/', {text : this.currentTodo })
+            .then(response => {
+                console.log(response);
+            })
+            .catch(err =>{
+                console.log(err);
+            });
+
+            this.currentTodo='';
+            this.refresh();
+            
+        },
+
+   
   }
 }
 </script>
