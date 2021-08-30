@@ -13,7 +13,7 @@ spec:
   hostPath:
     path: "/data/mongo-pv"
 
-
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:

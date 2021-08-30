@@ -10,6 +10,7 @@
 
                         <div class="col px-1 m-1 d-flex align-items-center">
                             <input  type="text" class="form-control form-control-lg border-0 edit-todo-input bg-transparent rounded px-3" readonly :value= "todoitem.text" :title= "todoitem.text" />
+
                             <input  type="text" class="form-control form-control-lg border-0 edit-todo-input rounded px-3 d-none" :value= "todoitem.text" />
                         </div>
                         
@@ -36,17 +37,17 @@ import axios from 'axios';
 export default {
   name: 'Todolist',
    data: function () {
-    return {
+        return {
 
-        deleteItem : function(_id){
-            axios.delete(this.$root.Url +'/todo/'+_id); 
-            this.$root.refresh();
+            deleteItem : function(_id){
+                axios.delete(this.$root.Url +'/todo/'+_id); 
+                this.$root.refresh();
+            }
         }
+    },
+    methods : {
+        
     }
-},
-methods : {
-    
-}
 }
 </script>
 

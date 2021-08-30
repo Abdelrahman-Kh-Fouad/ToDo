@@ -68,41 +68,41 @@ export default {
     Todolist
   },
    data () {
-      return {
-            list : [],
-            currentTodo :"",
-            Url: 'http://127.0.0.1:5000', 
-            idForTodo:''
-      }
-    },
-
-     created: function () {
-        //this.refresh(); 
-    }
-    ,
-  methods: {
-       refresh:function(){
-            axios.get(this.Url + '/todo/', )
-            .then(response => (this.list = response.data));
-            
-            console.log(this.list);
-  
+        return {
+                list : [],
+                currentTodo :"",
+                Url: 'http://127.0.0.1:5000', 
+                idForTodo:''
+        }
         },
 
+        created: function () {
+            this.refresh(); 
+        },
+        methods: {
+            refresh:function(){
+                axios.get(this.Url + '/todo/', )
+                .then(response => (this.list = response.data));
+                
+    
+        },
         AddNewOne:function() {
             console.log(this.currentTodo);
             if(this.currentTodo=='')
                 return;
+            this.currentId='';
             axios.post(this.Url+'/todo/', {text : this.currentTodo })
-            .then(response => {
-                console.log(response);
-            })
+            .then(response => (this.currentId = response.data))
             .catch(err =>{
                 console.log(err);
             });
+            console.log(this.currentId);
 
+            this.list.push({_id : this.currentId , text :this.currentTodo});
             this.currentTodo='';
-            this.refresh();
+
+            console.log(this.list); 
+
             
         },
 

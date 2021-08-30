@@ -1,14 +1,14 @@
 from flask import Flask,request ,json
 from flask_restful import reqparse, abort, Api, Resource
 from dbOperations import DataBase
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 
 
 app = Flask(__name__ )
-api = Api(app)
 Cors = CORS(app)
-CORS(app, resources={r'/*': {'origins': '*'}},CORS_SUPPORTS_CREDENTIALS = True)
-app.config['CORS_HEADERS'] = 'Content-Type'
+CORS(app , CORS_SUPPORTS_CREDENTIALS = False)
+api = Api(app)
+
 app.config["MONGO_URI"] = 'mongodb://mongo:27017'
 db =DataBase()
 
@@ -31,15 +31,15 @@ class DeleteAndChange(Resource):
 
 class ListAndInsert(Resource):
     def get(self):
-        return json.dumps(db.GetAllForJsonfy()) , 201
+        return db.GetAllForJsonfy() , 201
 
     def post(self):
-        print('sd')
+        
         args = parser.parse_args()
         print(args['text'])
-        db.Insert(args['text'])
-        print(db.GetAllForJsonfy())
-        return '', 201
+        insetedId = db.Insert(args['text'])
+        
+        return insetedId, 201
 
 
 
@@ -70,4 +70,4 @@ api.add_resource(DeleteAndChange, '/todo/<todo_id>')
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000) 
+    app.run(debug=True, port=5000) 
