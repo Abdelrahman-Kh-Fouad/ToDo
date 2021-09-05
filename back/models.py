@@ -1,5 +1,5 @@
 from  pymongo import MongoClient
-from back.app import dbUsers
+from app import dbUsers
 
 class User (dbUsers.Model):
     id = dbUsers.Column(dbUsers.Integer, primary_key=True) 

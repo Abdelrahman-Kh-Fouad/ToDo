@@ -1,8 +1,13 @@
+from sqlite3.dbapi2 import connect
 from  pymongo import MongoClient
 from bson import ObjectId
 import os
+import sqlite3
+from sqlite3 import Error
 
-class DataBase:
+import sqlalchemy
+
+class MongoDataBase:
     def __init__(self):
       
         # # myclient = pymongo.MongoClient("mongodb://localhost:27017/")
@@ -49,6 +54,41 @@ class DataBase:
 
     def Insert(self , todoText:str):
         insertedId = self.mongoCollection.insert_one({"text":todoText}).inserted_id
+        
         return insertedId
 
 
+class SQLDataBase :
+    def __init__(self) :
+        self.connection = sqlite3.connect('./users.db') 
+        self.cursor = self.connection.cursor()
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT , username TEXT , password text );''')
+        self.connection.commit()
+        
+
+
+    def Insert(self , username:str , password:str ):
+        self.cursor.execute('INSERT into users (username , password) values (? , ? );' , (username , password))
+        self.connection.commit()
+
+        return self.cursor.lastrowid
+
+    
+    def GetAll(self):
+        self.cursor.execute("SELECT * FROM users;")
+        return self.cursor.fetchall()
+
+    def Exist(self , username:str , password :str):
+        self.cursor.execute(f"SELECT * FROM users WHERE username = {username} AND password = {password};")
+        result = self.cursor.fetchone()
+        if len(result)==0:
+            return (False , )
+        else :
+            return (True ,result[0])
+
+
+
+
+db = SQLDataBase()
+print(db.Insert('ab' , "abbb"))
+print(db.GetAll())

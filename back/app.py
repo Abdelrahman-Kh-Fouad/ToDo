@@ -1,9 +1,10 @@
-from flask import Flask
+from flask import Flask     
 from flask_restful import reqparse, abort, Api, Resource
-from dbOperations import DataBase
+from DBOperations import DataBase
 from flask_cors import CORS
 from flask_login import LoginManager 
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy 
+
 
 
 app = Flask(__name__ )
@@ -45,9 +46,6 @@ class ListAndInsert(Resource):
         insetedId = db.Insert(args['text'])
         return insetedId, 201
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.get(user_id)
 
     
 api.add_resource(ListAndInsert, '/todo/')
@@ -75,5 +73,5 @@ api.add_resource(DeleteAndChange, '/todo/<todo_id>')
 #     return 'OK'
 
 
-if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0" , port=5000) 
+# if __name__ == '__main__':
+#     app.run(debug=True, host="0.0.0.0" , port=5000) 
