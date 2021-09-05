@@ -71,40 +71,43 @@ export default {
         return {
                 list : [],
                 currentTodo :"",
-                Url: 'http://127.0.0.1:5000', 
+                Url: process.env.VUE_APP_ROOT_API+'/todo', 
                 idForTodo:''
-        }
+            }
         },
 
         created: function () {
+            console.log(this.Url);
             this.refresh(); 
         },
         methods: {
+
             refresh:function(){
-                axios.get(this.Url + '/todo/', )
+                axios.get(this.Url  )
                 .then(response => (this.list = response.data));
+                console.log(this.Url );
+
+            },
+            AddNewOne:function() {
+                console.log(this.currentTodo);
+                if(this.currentTodo=='')
+                    return;
+
+                this.currentId='';
+                axios.post(this.Url+'/', {text : this.currentTodo })   
+                .then(response => (this.currentId = response.data))
+                .catch(err =>{
+                    console.log(err);
+                });
+                console.log(this.currentId);
+
+                this.list.push({_id : this.currentId , text :this.currentTodo});
+                this.currentTodo='';
+
+                console.log(this.list); 
+
                 
-    
-        },
-        AddNewOne:function() {
-            console.log(this.currentTodo);
-            if(this.currentTodo=='')
-                return;
-            this.currentId='';
-            axios.post(this.Url+'/todo/', {text : this.currentTodo })
-            .then(response => (this.currentId = response.data))
-            .catch(err =>{
-                console.log(err);
-            });
-            console.log(this.currentId);
-
-            this.list.push({_id : this.currentId , text :this.currentTodo});
-            this.currentTodo='';
-
-            console.log(this.list); 
-
-            
-        },
+            },
 
    
   }

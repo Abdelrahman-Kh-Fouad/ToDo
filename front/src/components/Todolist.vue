@@ -40,7 +40,8 @@ export default {
         return {
 
             deleteItem : function(_id){
-                axios.delete(this.$root.Url +'/todo/'+_id); 
+                console.log(_id);
+                axios.delete(this.$root.Url +'/'+_id); 
                 this.$root.refresh();
             }
         }

@@ -12,8 +12,13 @@ class DataBase:
         # self.MONGODB_HOST = 'localhost'
         # self.MONGODB_PORT = 27017   
         # # client = pymongo.MongoClient('localhost', MONGO_PORT)
+        MONGO_INITDB_ROOT_USERNAME = os.environ.get('MONGO_INITDB_ROOT_USERNAME')
+        #MONGO_INITDB_ROOT_USERNAME
+        MONGO_INITDB_ROOT_PASSWORD = os.environ.get('MONGO_INITDB_ROOT_PASSWORD')
+        DATABASE_URL = f'mongodb://{MONGO_INITDB_ROOT_USERNAME}:{MONGO_INITDB_ROOT_PASSWORD}@database:27017'
+        print(DATABASE_URL)
 
-        self.mongoCluster = MongoClient("mongodb://database:27017/")
+        self.mongoCluster = MongoClient(DATABASE_URL)
         #print(self.mongoCluster.list_database_names())
 
         self.mongoDB = self.mongoCluster["testingdb"]

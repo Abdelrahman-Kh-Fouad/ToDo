@@ -1,4 +1,3 @@
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -19,7 +18,17 @@ spec:
       - name: database
         image: mongo
         imagePullPolicy: IfNotPresent
-        
+        env:
+          - name: MONGO_INITDB_ROOT_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mongo-credentials
+                key: user
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mongo-credentials
+                key: password
         volumeMounts:
           - name: mongo-volume-mount
             mountPath: /var/lib/mongo/data
@@ -30,7 +39,7 @@ spec:
           claimName: mongo-pvc
       restartPolicy: Always
 
-
+---
 apiVersion: v1
 kind: Service
 metadata:
