@@ -1,9 +1,9 @@
 from flask import Flask     
 from flask_restful import reqparse, abort, Api, Resource
-from DBOperations import DataBase
+import sqlalchemy
+from DBOperations import MongoDataBase , SQLDataBase
 from flask_cors import CORS
 from flask_login import LoginManager 
-from flask_sqlalchemy import SQLAlchemy 
 
 
 
@@ -13,15 +13,26 @@ CORS(app , CORS_SUPPORTS_CREDENTIALS = False)
 api = Api(app)
 
 app.config["MONGO_URI"] = 'mongodb://database:27017'
-db =DataBase()
-dbUsers = SQLAlchemy()
-dbUsers.init_app(app)
+dbData = MongoDataBase()
+dbUsers = SQLDataBase()
 
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 parser = reqparse.RequestParser()
 parser.add_argument('text', type=str)
+
+
+
+
+class Registration(Resource):
+    args = parser.parse_args()
+    username = args['username']
+    password = args['password']
+
+    result = dbUsers.Exist(username , password)
+    if result[0]
+
 
 
 class DeleteAndChange(Resource):
@@ -47,7 +58,9 @@ class ListAndInsert(Resource):
         return insetedId, 201
 
 
-    
+
+
+
 api.add_resource(ListAndInsert, '/todo/')
 api.add_resource(DeleteAndChange, '/todo/<todo_id>')
 # @app.route('/data' )
