@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.database.name }}
+  labels:
+    name: {{ .Values.database.name }}
+spec:
+  replicas: {{ .Values.database.replicas }}
+  selector:
+    matchLabels:
+      service: {{ .Values.database.label }}
+  template:
+    metadata:
+      labels:
+        service: {{ .Values.database.label }}
+    spec:
+      containers:
+      - name: {{ .Values.database.name }}
+        image: {{ .Values.database.image }}
+        imagePullPolicy: {{ .Values.database.pullPolicy }}
+        env:
+          {{- range $element := .Values.env }}
+          - name: {{$element.name}}
+            valueFrom:
+              secretKeyRef:
+                name: {{ $element.secretName }}
+                key: {{ $element.key }}
+          {{- end }}
+
+        volumeMounts:
+          - name: mongo-volume-mount
+            mountPath: /var/lib/mongo/data
+
+      volumes:
+      - name: mongo-volume-mount
+        persistentVolumeClaim:
+          claimName: mongo-pvc
+      restartPolicy: {{ .Values.database.restartPolicy }}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.back.name }}
+  labels:
+    name: {{ .Values.back.name }}
+spec:
+  replicas: {{ .Values.back.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.back.label }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.back.label }}
+    spec:
+      containers:
+      - name: {{ .Values.back.name }}
+        image: {{ .Values.back.image }}
+        imagePullPolicy: {{ .Values.back.pullPolicy }}
+        env:
+          {{- range $var := .Values.env }}
+          - name: {{$var.name}}
+            valueFrom:
+              secretKeyRef:
+                name: {{ $var.secretName }}
+                key: {{ $var.key }}
+          {{- end }}
+      restartPolicy: {{ .Values.back.restartPolicy }}
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.front.name }}
+  labels:
+    name: {{ .Values.front.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.front.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.front.name }}
+    spec:
+      containers:
+      - name: {{ .Values.front.name }}
+        image: {{ .Values.front.image }}
+        imagePullPolicy: {{ .Values.front.pullPolicy }}
+      restartPolicy: {{ .Values.front.restartPolicy }}

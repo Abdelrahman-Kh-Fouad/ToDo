@@ -1,0 +1,5 @@
+Hala ..
+please run this line and copy result to your hosts configration file
+echo -e "$(minikube ip)\t{{.Values.ingress.host}}" 
+
+

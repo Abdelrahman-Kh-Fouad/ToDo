@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.database.name }}
+  labels:
+    service: {{ .Values.database.name }}
+spec:
+  selector:
+    service: {{ .Values.database.name }}
+  type: {{ .Values.database.serviceType }}
+  ports:
+  - port: {{ .Values.database.port }}
+
+
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.back.name }}
+  labels:
+    service: {{ .Values.back.name }}
+spec:
+  selector:
+    app: {{ .Values.back.name }}
+  ports:
+  - port: {{ .Values.back.port }}
+    targetPort: {{ .Values.back.targetPort }}
+
+
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.front.name }}
+  labels:
+    service: {{ .Values.front.name }}
+spec:
+  selector:
+    app: {{ .Values.front.name }}
+  ports:
+  - port: {{ .Values.front.port }}
+    targetPort: {{ .Values.front.targetPort }}
