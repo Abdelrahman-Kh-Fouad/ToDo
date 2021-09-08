@@ -107,7 +107,7 @@ database:
   name: database
   label: database
   replicas: 1
-  image: mongodb
+  image: mongo
   pullPolicy: IfNotPresent
   restartPolicy: Always
 
