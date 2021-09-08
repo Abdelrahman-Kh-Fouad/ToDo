@@ -1,61 +1,93 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "testHelm.fullname" . }}
+  name: {{ .Values.database.name }}
   labels:
-    {{- include "testHelm.labels" . | nindent 4 }}
+    name: {{ .Values.database.name }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-  {{- end }}
+  replicas: {{ .Values.database.replicas }}
   selector:
     matchLabels:
-      {{- include "testHelm.selectorLabels" . | nindent 6 }}
+      service: {{ .Values.database.label }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
-        {{- include "testHelm.selectorLabels" . | nindent 8 }}
+        service: {{ .Values.database.label }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      serviceAccountName: {{ include "testHelm.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      - name: {{ .Values.database.name }}
+        image: {{ .Values.database.image }}
+        imagePullPolicy: {{ .Values.database.pullPolicy }}
+        env:
+          {{- range $element := .Values.env }}
+          - name: {{$element.name}}
+            valueFrom:
+              secretKeyRef:
+                name: {{ $element.secretName }}
+                key: {{ $element.key }}
+          {{- end }}
+
+        volumeMounts:
+          - name: mongo-volume-mount
+            mountPath: /var/lib/mongo/data
+
+      volumes:
+      - name: mongo-volume-mount
+        persistentVolumeClaim:
+          claimName: mongo-pvc
+      restartPolicy: {{ .Values.database.restartPolicy }}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.back.name }}
+  labels:
+    name: {{ .Values.back.name }}
+spec:
+  replicas: {{ .Values.back.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.back.label }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.back.label }}
+    spec:
+      containers:
+      - name: {{ .Values.back.name }}
+        image: {{ .Values.back.image }}
+        imagePullPolicy: {{ .Values.back.pullPolicy }}
+        env:
+          {{- range $var := .Values.env }}
+          - name: {{$var.name}}
+            valueFrom:
+              secretKeyRef:
+                name: {{ $var.secretName }}
+                key: {{ $var.key }}
+          {{- end }}
+      restartPolicy: {{ .Values.back.restartPolicy }}
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.front.name }}
+  labels:
+    name: {{ .Values.front.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.front.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.front.name }}
+    spec:
+      containers:
+      - name: {{ .Values.front.name }}
+        image: {{ .Values.front.image }}
+        imagePullPolicy: {{ .Values.front.pullPolicy }}
+      restartPolicy: {{ .Values.front.restartPolicy }}

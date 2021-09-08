@@ -1,15 +1,48 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "testHelm.fullname" . }}
+  name: {{ .Values.database.name }}
   labels:
-    {{- include "testHelm.labels" . | nindent 4 }}
+    service: {{ .Values.database.name }}
 spec:
-  type: {{ .Values.service.type }}
-  ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
   selector:
-    {{- include "testHelm.selectorLabels" . | nindent 4 }}
+    service: {{ .Values.database.name }}
+  type: {{ .Values.database.serviceType }}
+  ports:
+  - port: {{ .Values.database.port }}
+
+
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.back.name }}
+  labels:
+    service: {{ .Values.back.name }}
+spec:
+  selector:
+    app: {{ .Values.back.name }}
+  ports:
+  - port: {{ .Values.back.port }}
+    targetPort: {{ .Values.back.targetPort }}
+
+
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.front.name }}
+  labels:
+    service: {{ .Values.front.name }}
+spec:
+  selector:
+    app: {{ .Values.front.name }}
+  ports:
+  - port: {{ .Values.front.port }}
+    targetPort: {{ .Values.front.targetPort }}
