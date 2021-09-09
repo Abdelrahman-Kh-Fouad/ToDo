@@ -6,12 +6,37 @@
       <input type="password" placeholder="password"/>
       <input type="text" placeholder="email address"/>
       <button>create</button>
-      <p class="message">Already registered? <a href="#">Sign In</a></p>
+      <p class="message">Already registered? <a href ="#" @click="SwitchToLogin()">Sign In</a></p>
     </form>
   
   </div>
 </div>
 </template>
+
+<script>
+// @ is an alias to /src
+//import axios from 'axios';
+
+export default {
+  name: 'register',
+  components: {
+    
+  },
+  data : function(){
+    return {
+    }
+  },
+  methods :{
+
+    SwitchToLogin:function(){
+      this.$router.push('login');
+    } 
+  }
+  
+}
+</script>
+
+
 
 <style>
   
@@ -70,7 +95,7 @@
     text-decoration: none;
   }
   .form .register-form {
-    display: none;
+    display: inline;
   }
   .container {
     position: relative;

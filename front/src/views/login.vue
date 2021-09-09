@@ -6,8 +6,8 @@
       <input type="text" placeholder="username"/>
       <input type="password" placeholder="password"/>
       <button>login</button>
-      <p class="message">Not registered? <a href="#">Create an account</a></p>
-    </form>
+      <p class="message">Not registered? <a href="#" @click="SwitchToRegistration()" >Create an account</a></p>
+    </form> 
 
   </div>
 </div>
@@ -20,11 +20,28 @@
 
 <script>
 // @ is an alias to /src
+//import axios from 'axios';
 
 export default {
   name: 'login',
   components: {
+    
+  },
+  data : function(){
+    return {
+
+       
+    }
+  },
+  methods :{
+
+     SwitchToRegistration:function(){
+          console.log('a');
+          this.$router.push('register');
+        } 
+
   }
+  
 }
 </script>
 
