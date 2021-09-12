@@ -3,19 +3,15 @@
   <div class="form">
 
     <form class="login-form">
-      <input type="text" placeholder="username"/>
-      <input type="password" placeholder="password"/>
-      <button>login</button>
-      <p class="message">Not registered? <a href="#" @click="SwitchToRegistration()" >Create an account</a></p>
-    </form> 
+
+      <button @click="Signin()"> <a style="color: white" href = 'https://github.com/login/oauth/authorize?client_id=4ebb67bce288c83e5459'>github</a></button>
+    </form>
+
+
 
   </div>
 </div>
 </template>
-
-
-
-
 
 
 <script>
@@ -29,16 +25,24 @@ export default {
   },
   data : function(){
     return {
+      username : "",
+      password : "",
+      client_id_ : "4ebb67bce288c83e5459",
+
 
        
     }
   },
   methods :{
+    Signin:function(){
 
-     SwitchToRegistration:function(){
-          console.log('a');
-          this.$router.push('register');
-        } 
+      //window.open("https://github.com/login/oauth/authorize?client_id=4ebb67bce288c83e5459", '_self');
+      //window.location.hr  ef("https://github.com/login/oauth/authorize?client_id=4ebb67bce288c83e5459");
+    },
+    SwitchToRegistration:function(){
+      console.log('a');
+      this.$router.push('register');
+    } 
 
   }
   

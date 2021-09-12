@@ -14,7 +14,7 @@ services:
       - "27017:27017"
 
   back:
-    build: ./back
+    image: abdelrahmankh/back:last
     hostname: back
     ports:
       - "5000:5000"
@@ -26,7 +26,7 @@ services:
       - mongo
 
   front:
-    build: ./front
+    image: abdelrahmankh/front:last
     volumes: 
       - ./front:/front
     container_name: front

@@ -8,7 +8,7 @@ from sqlite3 import Error
 import sqlalchemy
 
 class MongoDataBase:
-    def __init__(self , id):
+    def __init__(self ,id):
       
         # # myclient = pymongo.MongoClient("mongodb://localhost:27017/")
         # # mydb = myclient["mydatabase"]
@@ -84,7 +84,8 @@ class SQLDataBase :
     def Exist(self , username:str , password :str):
         self.cursor.execute(f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}';")
         result = self.cursor.fetchone()
-        if len(result)==0:
+        print(result)
+        if result==None:
             return (False , )
         else :
             return (True ,result[0])
@@ -93,5 +94,7 @@ class SQLDataBase :
 
 
 db = SQLDataBase()
+db.Insert('abdelrhman-kh' , 'ad')
 print(db.Exist('ab' , 'abbb'))
 print(db.GetOne('ab' , 'abbb'))
+print(db.GetAll())
