@@ -21,7 +21,7 @@ export default {
     let params = new URLSearchParams(uri);
     let codeForAuth = params.get("code");
 
-    this.axios.get('http://to.me:5000/githubToken/'+codeForAuth).then((response) =>{this.GetUser(response.data)});
+    this.axios.get('http://to.me/todo/githubToken/'+codeForAuth).then((response) =>{this.GetUser(response.data)});
     //axios.post('https://github.com/login/oauth/access_token?client_id=${this.client_id}&client_secret=${this.client_secret}&code={codeForAuth}')
     // var config = {
     //   headers: {
@@ -46,7 +46,7 @@ export default {
   },
   methods:{
     GetUser:function (token){
-      this.axios.get('http://to.me:5000/githubAuth/'+token).then((response) => {
+      this.axios.get('http://to.me/todo/githubAuth/'+token).then((response) => {
         this.username = response.data ;
         console.log(this.username);
         this.$router.push({name : 'todo' ,params : {username : this.username} });

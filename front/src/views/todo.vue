@@ -73,39 +73,51 @@ export default {
     return {
       list: [],
       currentTodo: "",
-      Url: 'http://to.me:5000' + '/todo',
-      idForTodo: ''
+      Url: 'http://to.me' + '/todo',
+      idForTodo: '',
+      currentUser : ''
     }
   },
   created: function () {
-    console.log(this.Url);
+    console.log(this.$route.params);
+    this.currentUser = this.$route.params['username']
     this.refresh();
   },
   methods: {
+
     refresh: function () {
-      axios.get(this.Url)
+
+      axios.get(this.Url+'/'+this.currentUser)
           .then(response => (this.list = response.data));
+      console.log(this.list);
       console.log(this.Url);
     },
     AddNewOne: function () {
       console.log(this.currentTodo);
       if (this.currentTodo == '')
         return;
-      this.currentId = '';
-      axios.post(this.Url + '/', {text: this.currentTodo})
-          .then(response => (this.currentId = response.data))
-          .catch(err => {
-            console.log(err);
-          });
-      console.log(this.currentId);
+
+      this.currentId = '-';
+      axios.post(this.Url+'/'+this.currentUser, {text: this.currentTodo})
+          .then( (response) => {
+            this.currentId = response.data ;
+            console.log(this.currentId);
+            this.AfterAddingNewOne()
+        });
+    },
+    AfterAddingNewOne:function (){
+
       this.list.push({_id: this.currentId, text: this.currentTodo});
       this.currentTodo = '';
       console.log(this.list);
-
-    },
+    }
 
   }
 }
+
+    // .catch(err => {
+    //   console.log(err);
+    // }
 </script>
 
 <style>

@@ -5,7 +5,7 @@
                     <!-- Todo Items -->
                     
                     <!--<Todoitem v-for =" item in TODOdata" :todoitem =' item' ></Todoitem>-->
-                    <div class="row px-3 align-items-center todo-item rounded" v-for="todoitem in this.$root.list" :key="todoitem">
+                    <div class="row px-3 align-items-center todo-item rounded" v-for="todoitem in this.$parent.list" :key="todoitem">
                                                     
 
                         <div class="col px-1 m-1 d-flex align-items-center">
@@ -29,26 +29,26 @@
                     </div>
                 </div>
             </div>
-  
+
 </template>
 
 <script>
 import axios from 'axios';
 export default {
   name: 'Todolist',
-   data: function () {
-        return {
+  data: function () {
+      return {
 
-            deleteItem : function(_id){
-                console.log(_id);
-                axios.delete(this.$root.Url +'/'+_id); 
-                this.$root.refresh();
-            }
-        }
-    },
-    methods : {
-        
-    }
+          deleteItem : function(_id){
+              console.log(_id);
+              axios.delete(this.$parent.Url +'/'+ this.$parent.currentUser+'/'+_id);
+              this.$parent.refresh();
+          }
+      }
+  },
+  methods : {
+
+  }
 }
 </script>
 

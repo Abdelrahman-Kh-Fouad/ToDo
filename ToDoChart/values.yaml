@@ -122,7 +122,7 @@ back:
   name: back
   label: back
   replicas: 1
-  image: abdelrahmankh/back:last
+  image: abdelrahmankh/back:v1
   pullPolicy: IfNotPresent
   restartPolicy: Always
 
@@ -134,7 +134,7 @@ front:
   name: front
   label: front
   replicas: 1
-  image: abdelrahmankh/front:last
+  image: abdelrahmankh/front:v2
 
   pullPolicy: IfNotPresent
   restartPolicy: Always

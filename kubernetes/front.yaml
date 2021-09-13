@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: front
-        image: abdelrahmankh/front:last
+        image: abdelrahmankh/front:v1
         imagePullPolicy: IfNotPresent
       restartPolicy: Always
 

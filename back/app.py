@@ -8,17 +8,26 @@ import requests
 
 app = Flask(__name__ )
 Cors = CORS(app)
-CORS(app , CORS_SUPPORTS_CREDENTIALS = False)
+CORS(app , CORS_SUPPORTS_CREDENTIALS = True)
 api = Api(app)
 
 app.config["MONGO_URI"] = 'mongodb://database:27017'
-dbData = None
-
+app.config['PROPAGATE_EXCEPTIONS'] = True
 parser = reqparse.RequestParser()
 parser.add_argument('text', type=str)
 
 client_id = '4ebb67bce288c83e5459'
 client_secret ='48efba84350d8e5111647a5d01f0f741456ae316'
+
+
+class Var:
+    def __init__(self):
+        self.dbData = MongoDataBase()
+        self.conUserName = ''
+
+global myVar
+
+myVar = Var()
 
 
 class GithubToken(Resource):
@@ -32,18 +41,12 @@ class GithubToken(Resource):
 
 class GithubAuth(Resource):
     def get(self , token):
-
         r = requests.get('https://api.github.com/user', headers={'Authorization': f'token {token}'})
         dataJson = r.json()
         userName = dataJson['login']
-        dbUsers = SQLDataBase()
-        print(dbUsers.GetAll())
-
-
-        if not (dbUsers.Exist(userName , '0' )[0]):
-             dbUsers.Insert(userName , '0')
-        key = dbUsers.Exist(userName, '0')[1]
-        dbData = MongoDataBase(key)
+        myVar.consUserName = userName
+        if not myVar.dbData.UserIn(userName):
+             myVar.dbData.Insert(' ', userName)
 
         return (userName ,201)
 
@@ -74,8 +77,8 @@ class Login(Resource):
 
 
 class DeleteAndChange(Resource):
-    def delete(self, todo_id):
-        dbData.RemoveById(todo_id)
+    def delete(self, user,todo_id):
+        myVar.dbData.RemoveById(todo_id ,user)
 
         return '', 201
 
@@ -86,26 +89,46 @@ class DeleteAndChange(Resource):
     #     return task, 201
 
 class ListAndInsert(Resource):
-    def get(self):
-        return dbData.GetAllForJsonfy() , 201
+    def get(self,user):
+        if len(myVar.dbData.GetAllForJsonfy(user)) !=0 :
+            return myVar.dbData.GetAllForJsonfy(user),201
+        else :
+            return '',201
 
-    def post(self):
+
+    def post(self ,user):
         args = parser.parse_args()
         print(args['text'])
-        insetedId = dbData.Insert(args['text'])
-        return insetedId, 201
+        insetedId = myVar.dbData.Insert(args['text'] , user)
+        print(insetedId)
+        return str(insetedId), 201
+
+# @app.route('/todo/<user>' ,methods = ['GET' ,'POST'])
+# def ListAndInsert(user):
+#     if request.method =='POST':
+#         args = request.args
+#         print(args['text'])
+#         insetedId = myVar.dbData.Insert(args['text'], user)
+#         print(insetedId)
+#         return insetedId ,201
+#     else :
+#         if len(myVar.dbData.GetAllForJsonfy(user)) !=0 :
+#             return myVar.dbData.GetAllForJsonfy(user),201
+#         else :
+#             return '',201
 
 
 
+api.add_resource(GithubAuth ,'/todo/githubAuth/<token>')
+api.add_resource(ListAndInsert, '/todo/<user>')
+api.add_resource(DeleteAndChange, '/todo/<user>/<todo_id>')
+api.add_resource(GithubToken , '/todo/githubToken/<code>')
 
-api.add_resource(GithubAuth ,'/githubAuth/<token>')
-api.add_resource(ListAndInsert, '/todo')
-api.add_resource(DeleteAndChange, '/todo/<todo_id>')
-api.add_resource(GithubToken , '/githubToken/<code>')
+
 # @app.route('/data' )
 # def SendData():    
 #     dataAsDict = db.GetAllForJsonfy()
-#     #print(db.GetAllForJsonfy()) 
+#     #print(db.GetAllForJsonf  y())
 #     return json.dumps(dataAsDict)
 
 
@@ -125,5 +148,8 @@ api.add_resource(GithubToken , '/githubToken/<code>')
 #     return 'OK'
 
 
+
+
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0" , port=5000) 
+
+    app.run(debug = False, host="0.0.0.0" , port=5000)

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: back
-        image: abdelrahmankh/back:last
+        image: abdelrahmankh/back:v1
         imagePullPolicy: IfNotPresent
         env:
         - name: MONGO_INITDB_ROOT_USERNAME
