@@ -1,4 +1,6 @@
-from flask import Flask     
+from urllib.parse import urlencode
+
+from flask import Flask
 from flask_restful import reqparse, abort, Api, Resource ,request
 from DBOperations import MongoDataBase , SQLDataBase
 from flask_cors import CORS
@@ -29,6 +31,24 @@ global myVar
 
 myVar = Var()
 
+class ThreeUrl(Resource):
+    def get(self):
+        loginUrl = "https://deploy3bot.devnet.grid.tf/"
+        appId = "to.me/todo"
+        redirectUrl = "ThreeAuth/"
+        seedPhrase = 'calm science teach foil burst until ' \
+              'next mango hole sponsor fold bottom ' \
+              'cousin push focus track truly tornado ' \
+              'turtle over tornado teach large fiscal'
+
+
+        params = {
+            'state': state,
+            'appid': appId,
+            'publickey': public_key,
+            'redirecturl': redirectUrl,
+        }
+        return '{}/?{}'.format(loginUrl, urlencode(dict(params)))
 
 class GithubToken(Resource):
     def get (self , code ):

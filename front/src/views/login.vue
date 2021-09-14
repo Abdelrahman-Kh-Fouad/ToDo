@@ -3,8 +3,9 @@
   <div class="form">
 
     <form >
-
       <button @click="Signin()"> <a style="color: white" href = 'https://github.com/login/oauth/authorize?client_id=4ebb67bce288c83e5459'>github</a></button>
+      <button @click="ThreeBot()"> <a style="color: white" >3bot</a></button>
+
     </form>
 
 
@@ -16,7 +17,7 @@
 
 <script>
 // @ is an alias to /src
-//import axios from 'axios';
+import axios from 'axios';
 
 export default {
   name: 'login',
@@ -42,7 +43,10 @@ export default {
     SwitchToRegistration:function(){
       console.log('a');
       this.$router.push('register');
-    } 
+    },
+    ThreeBot:function (){
+      axios.
+    }
 
   }
   

@@ -34,12 +34,13 @@
 
 <script>
 import axios from 'axios';
+
 export default {
   name: 'Todolist',
   data: function () {
       return {
-
           deleteItem : function(_id){
+
               console.log(_id);
               axios.delete(this.$parent.Url +'/'+ this.$parent.currentUser+'/'+_id);
               this.$parent.refresh();
