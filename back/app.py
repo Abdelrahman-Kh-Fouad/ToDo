@@ -1,6 +1,6 @@
 from urllib.parse import urlencode
 
-from flask import Flask
+from flask import Flask ,redirect
 from flask_restful import reqparse, abort, Api, Resource ,request
 from DBOperations import MongoDataBase , SQLDataBase
 from flask_cors import CORS
@@ -11,6 +11,7 @@ import nacl
 import json
 from uuid import uuid4
 from urllib.parse import urlencode, quote, unquote
+import base64
 
 app = Flask(__name__ )
 Cors = CORS(app)
@@ -39,6 +40,35 @@ PRIV_KEY = nacl.signing.SigningKey(kstr, encoder=nacl.encoding.Base64Encoder)
 
 
 
+
+
+class CallBack(Resource):
+
+    def get(self):
+        session = request.environ.get("beaker.session")
+        data = request.args["signedAttempt"]
+        state = request.get_data("state")
+        if not data:
+            return 400,
+
+        data = json.loads(data)
+        username = data["doubleName"]
+
+        res = requests.get(f"https://login.threefold.me/api/users/{username}", {"Content-Type": "application/json"})
+        pub_key = res.json()["publicKey"]
+        user_pub_key = nacl.signing.VerifyKey(res.json()["publicKey"], encoder=nacl.encoding.Base64Encoder)
+
+        signedData = data["signedAttempt"]
+        verifiedData = user_pub_key.verify(base64.b64decode(signedData)).decode()
+        data = json.loads(verifiedData)
+
+        if "doubleName" not in data or "signedState" not in data or data["doubleName"] != username:
+            return (400, "Error")
+
+
+        return redirect(f'/todo/{username}') ,201
+
+
 class ThreeUrl(Resource):
     def get(self):
         public_key = PRIV_KEY.verify_key
@@ -50,7 +80,7 @@ class ThreeUrl(Resource):
 
         params = {
             "state": state,
-            "appid": request.host,
+            "appid": request.host+'/todo',
             "scope": json.dumps({"user": True, "email": True}),
             "redirecturl": '/call_back',
             "publickey": public_key.encode(),
@@ -154,6 +184,7 @@ api.add_resource(DeleteAndChange, '/todo/<user>/<todo_id>')
 api.add_resource(GithubToken , '/todo/githubToken/<code>')
 api.add_resource(GithubAuth ,'/todo/githubAuth/<token>')
 api.add_resource(ThreeUrl ,'/todo/threeUrl')
+api.add_resource(CallBack , '/todo/call_back')
 
 # @app.route('/data' )
 # def SendData():    
