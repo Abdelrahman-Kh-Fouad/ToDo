@@ -3,6 +3,7 @@ import login from '../views/login.vue'
 import register from '../views/register.vue'
 import github from "@/views/github";
 import todo from "@/views/todo";
+import three_bot from "@/views/three_bot";
 
 const routes = [
   {
@@ -28,6 +29,10 @@ const routes = [
     path : '/todo',
     name : 'todo',
     component: todo
+  },{
+    path : '/three_bot',
+    name : 'three_bot',
+    component: three_bot
   }
 ]
 

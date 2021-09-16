@@ -66,7 +66,7 @@ class CallBack(Resource):
             return (400, "Error")
 
 
-        return redirect(f'/todo/{username}') ,201
+        return username ,201
 
 
 class ThreeUrl(Resource):
@@ -80,9 +80,9 @@ class ThreeUrl(Resource):
 
         params = {
             "state": state,
-            "appid": request.host+'/todo',
+            "appid": request.host,
             "scope": json.dumps({"user": True, "email": True}),
-            "redirecturl": '/call_back',
+            "redirecturl": '/three_bot',
             "publickey": public_key.encode(),
         }
         params = urlencode(params)
@@ -213,4 +213,4 @@ api.add_resource(CallBack , '/todo/call_back')
 
 if __name__ == '__main__':
 
-    app.run(debug = False, host="0.0.0.0" , port=5000)
+    app.run(debug = True, host="0.0.0.0" , port=5000)
