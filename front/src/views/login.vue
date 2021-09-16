@@ -4,7 +4,7 @@
 
     <form >
       <button @click="Signin()"> <a style="color: white" href = 'https://github.com/login/oauth/authorize?client_id=4ebb67bce288c83e5459'>github</a></button>
-      <button @click="ThreeBot()"> <a style="color: white" >3bot</a></button>
+      <button @click="ThreeBot()"> <a style="color: white" :href=this.threeBotUrl> </a></button>
 
     </form>
 
@@ -29,9 +29,7 @@ export default {
       username : "",
       password : "",
       client_id_ : "4ebb67bce288c83e5459",
-
-
-       
+      threeBotUrl : ''
     }
   },
   methods :{
@@ -45,7 +43,7 @@ export default {
       this.$router.push('register');
     },
     ThreeBot:function (){
-      axios.
+      axios.get('http://to.me/todo/threeUrl').then((response)=>{this.threeBotUrl = response.data});
     }
 
   }

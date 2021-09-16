@@ -6,7 +6,11 @@ from DBOperations import MongoDataBase , SQLDataBase
 from flask_cors import CORS
 from flask_login import LoginManager 
 import requests
-
+from nacl.signing import VerifyKey
+import nacl
+import json
+from uuid import uuid4
+from urllib.parse import urlencode, quote, unquote
 
 app = Flask(__name__ )
 Cors = CORS(app)
@@ -28,27 +32,32 @@ class Var:
         self.conUserName = ''
 
 global myVar
-
 myVar = Var()
+k = nacl.signing.SigningKey.generate()  # Ususally the key is generated using a seed
+k.encode(encoder=nacl.encoding.Base64Encoder).decode()
+PRIV_KEY = nacl.signing.SigningKey(k, encoder=nacl.encoding.Base64Encoder)
+
+
 
 class ThreeUrl(Resource):
     def get(self):
-        loginUrl = "https://deploy3bot.devnet.grid.tf/"
-        appId = "to.me/todo"
-        redirectUrl = "ThreeAuth/"
-        seedPhrase = 'calm science teach foil burst until ' \
-              'next mango hole sponsor fold bottom ' \
-              'cousin push focus track truly tornado ' \
-              'turtle over tornado teach large fiscal'
+        public_key = PRIV_KEY.verify_key
+        public_key = public_key.to_curve25519_public_key().encode(encoder=nacl.encoding.Base64Encoder).decode()
 
+        session = request.environ.get("beaker.session", {})
+        state = str(uuid4()).replace("-", "")
+        session["state"] = state
 
         params = {
-            'state': state,
-            'appid': appId,
-            'publickey': public_key,
-            'redirecturl': redirectUrl,
+            "state": state,
+            "appid": '192.168.1.2:8787',
+            "scope": json.dumps({"user": True, "email": True}),
+            "redirecturl": '/call_back',
+            "publickey": public_key.encode(),
         }
-        return '{}/?{}'.format(loginUrl, urlencode(dict(params)))
+        params = urlencode(params)
+        return params, 201
+
 
 class GithubToken(Resource):
     def get (self , code ):
@@ -139,11 +148,11 @@ class ListAndInsert(Resource):
 
 
 
-api.add_resource(GithubAuth ,'/todo/githubAuth/<token>')
 api.add_resource(ListAndInsert, '/todo/<user>')
 api.add_resource(DeleteAndChange, '/todo/<user>/<todo_id>')
 api.add_resource(GithubToken , '/todo/githubToken/<code>')
-
+api.add_resource(GithubAuth ,'/todo/githubAuth/<token>')
+api.add_resource(ThreeUrl ,'todo/threeUrl')
 
 # @app.route('/data' )
 # def SendData():    
