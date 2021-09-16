@@ -134,7 +134,7 @@ front:
   name: front
   label: front
   replicas: 1
-  image: abdelrahmankh/front:v2
+  image: abdelrahmankh/front:v1
 
   pullPolicy: IfNotPresent
   restartPolicy: Always

@@ -34,8 +34,8 @@ class Var:
 global myVar
 myVar = Var()
 k = nacl.signing.SigningKey.generate()  # Ususally the key is generated using a seed
-k.encode(encoder=nacl.encoding.Base64Encoder).decode()
-PRIV_KEY = nacl.signing.SigningKey(k, encoder=nacl.encoding.Base64Encoder)
+kstr = k.encode(encoder=nacl.encoding.Base64Encoder).decode()
+PRIV_KEY = nacl.signing.SigningKey(kstr, encoder=nacl.encoding.Base64Encoder)
 
 
 
@@ -43,20 +43,21 @@ class ThreeUrl(Resource):
     def get(self):
         public_key = PRIV_KEY.verify_key
         public_key = public_key.to_curve25519_public_key().encode(encoder=nacl.encoding.Base64Encoder).decode()
-
+        HOST ="https://login.threefold.me"
         session = request.environ.get("beaker.session", {})
         state = str(uuid4()).replace("-", "")
         session["state"] = state
 
         params = {
             "state": state,
-            "appid": '192.168.1.2:8787',
+            "appid": request.host,
             "scope": json.dumps({"user": True, "email": True}),
             "redirecturl": '/call_back',
             "publickey": public_key.encode(),
         }
         params = urlencode(params)
-        return params, 201
+        return f"{HOST}?{params}", 201
+
 
 
 class GithubToken(Resource):
@@ -152,7 +153,7 @@ api.add_resource(ListAndInsert, '/todo/<user>')
 api.add_resource(DeleteAndChange, '/todo/<user>/<todo_id>')
 api.add_resource(GithubToken , '/todo/githubToken/<code>')
 api.add_resource(GithubAuth ,'/todo/githubAuth/<token>')
-api.add_resource(ThreeUrl ,'todo/threeUrl')
+api.add_resource(ThreeUrl ,'/todo/threeUrl')
 
 # @app.route('/data' )
 # def SendData():    

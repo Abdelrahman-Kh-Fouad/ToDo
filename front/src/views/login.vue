@@ -4,7 +4,7 @@
 
     <form >
       <button @click="Signin()"> <a style="color: white" href = 'https://github.com/login/oauth/authorize?client_id=4ebb67bce288c83e5459'>github</a></button>
-      <button @click="ThreeBot()"> <a style="color: white" :href=this.threeBotUrl> </a></button>
+      <button @click="ThreeBot()"> <a style="color: white" :href=this.threeBotUrl>Three</a></button>
 
     </form>
 
@@ -43,11 +43,18 @@ export default {
       this.$router.push('register');
     },
     ThreeBot:function (){
-      axios.get('http://to.me/todo/threeUrl').then((response)=>{this.threeBotUrl = response.data});
+      axios.get('http://to.me/todo/threeUrl').then((response)=>{
+        this.threeBotUrl = response.data;
+        console.log(this.threeBotUrl);
+      });
     }
 
+  },
+  created() {
+    this.ThreeBot();
   }
-  
+
+
 }
 </script>
 
