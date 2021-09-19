@@ -18,8 +18,10 @@ export default {
     console.log('to.me/todo/call_back?'+uri_args)
 
     axios.get('https://to.me/todo/call_back?'+uri_args).then((response)=>{
-      this.username = response;
-      this.$router.push({name : 'todo' ,params : {username : this.username} });
+      this.username = response.data;
+      console.log(this.name)
+      this.$root.state = this.username;
+      this.$router.push({name : 'todo'  });
     });
 
 

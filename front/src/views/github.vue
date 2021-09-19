@@ -21,16 +21,17 @@ export default {
     let params = new URLSearchParams(uri);
     let codeForAuth = params.get("code");
 
-    this.axios.get('http://to.me/todo/githubToken/'+codeForAuth).then((response) =>{this.GetUser(response.data)});
+    this.axios.get('https://to.me/todo/githubToken/'+codeForAuth).then((response) =>{this.GetUser(response.data)});
 
   },
   methods:{
 
     GetUser:function (token){
-      this.axios.get('http://to.me/todo/githubAuth/'+token).then((response) => {
+      this.axios.get('https://to.me/todo/githubAuth/'+token).then((response) => {
         this.username = response.data ;
         console.log(this.username);
-        this.$router.push({name : 'todo' ,params : {username : this.username} });
+        this.$root.state = this.username;
+        this.$router.push({name : 'todo' });
       });
       // this.$router.push('todo')
     }

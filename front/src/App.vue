@@ -8,8 +8,15 @@
 
 <script>
   export default {
+
+    data:function (){
+      return{
+        state :''
+      }
+    },
     created(){
       //this.$router.push('github');
+
 
     }
     

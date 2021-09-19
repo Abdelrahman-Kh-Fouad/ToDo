@@ -17,6 +17,7 @@
 // @ is an alias to /src
 //import axios from 'axios';
 
+
 export default {
   name: 'register',
   components: {
@@ -27,8 +28,8 @@ export default {
     }
   },
   methods :{
-
     SwitchToLogin:function(){
+
       this.$router.push('login');
     } 
   }

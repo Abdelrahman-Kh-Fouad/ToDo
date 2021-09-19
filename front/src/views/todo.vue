@@ -1,5 +1,9 @@
 <template>
 
+
+  <div className="col-auto px-0 mx-0 mr-2">
+    <button className="btn btn-primary"  v-on:click="Logout">logout</button>
+  </div>
   <div className="container m-5 p-2 rounded mx-auto bg-light shadow">
 
 
@@ -73,14 +77,22 @@ export default {
     return {
       list: [],
       currentTodo: "",
-      Url: 'http://to.me' + '/todo',
+      Url: 'https://to.me' + '/todo',
       idForTodo: '',
       currentUser : ''
     }
   },
+  beforeMount() {
+    console.log("--->" , this.$root.state);
+    if (this.$root.state ==''){
+      this.$router.push('login');
+    }
+
+
+  },
   created: function () {
-    console.log(this.$route.params);
-    this.currentUser = this.$route.params['username']
+    this.currentUser = this.$root.state;
+    console.log(this.currentUser);
     this.refresh();
   },
   methods: {
@@ -88,9 +100,8 @@ export default {
     refresh: function () {
 
       axios.get(this.Url+'/'+this.currentUser)
-          .then(response => (this.list = response.data));
-      console.log(this.list);
-      console.log(this.Url);
+          .then((response) => {this.list = response.data ; console.log(this.list)});
+
     },
     AddNewOne: function () {
       console.log(this.currentTodo);
@@ -102,7 +113,7 @@ export default {
           .then( (response) => {
             this.currentId = response.data ;
             console.log(this.currentId);
-            this.AfterAddingNewOne()
+            this.AfterAddingNewOne();
         });
     },
     AfterAddingNewOne:function (){
@@ -110,6 +121,12 @@ export default {
       this.list.push({_id: this.currentId, text: this.currentTodo});
       this.currentTodo = '';
       console.log(this.list);
+    },
+    Logout:function (){
+      this.$root.state = '';
+      this.$router.push({name : 'login'});
+
+
     }
 
   }

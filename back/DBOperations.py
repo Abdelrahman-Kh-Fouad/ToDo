@@ -94,7 +94,6 @@ class SQLDataBase :
         else :
             return (True ,result[0])
 
-#"Abdelrahman-Kh-Fouad"
 if __name__ == '__main__':
     mog = MongoDataBase()
     idd = input()

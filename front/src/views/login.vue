@@ -26,6 +26,7 @@ export default {
   },
   data : function(){
     return {
+      state:'',
       username : "",
       password : "",
       client_id_ : "4ebb67bce288c83e5459",
@@ -43,7 +44,7 @@ export default {
       this.$router.push('register');
     },
     ThreeBot:function (){
-      axios.get('http://to.me/todo/threeUrl').then((response)=>{
+      axios.get('https://to.me/todo/threeUrl').then((response)=>{
         this.threeBotUrl = response.data;
         console.log(this.threeBotUrl);
       });
