@@ -123,6 +123,7 @@ export default {
     },
     Logout:function (){
       this.$root.state = '';
+      this.$cookies.set('state' ,'');
       this.$router.push({name : 'login'});
 
 

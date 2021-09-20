@@ -55,6 +55,8 @@ export default {
   created() {
     if (this.$root.state != '')
       this.$router.push({name : 'home'});
+
+
     this.ThreeBot();
 
   }

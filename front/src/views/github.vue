@@ -31,7 +31,9 @@ export default {
         this.username = response.data ;
         console.log(this.username);
         this.$root.state = this.username;
-        window.localStorage.setItem('state' , this.username);
+        //window.localStorage.setItem('state' , this.username);
+        this.$cookies.set("state" ,this.username);
+
         this.$router.push({name : 'home' });
       });
       // this.$router.push('todo')

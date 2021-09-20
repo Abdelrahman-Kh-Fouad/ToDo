@@ -21,7 +21,8 @@ export default {
       this.username = response.data;
       console.log(this.name)
       this.$root.state = this.username;
-      window.localStorage.setItem('state' , this.username);
+     // window.localStorage.setItem('state' , this.username);
+      this.$cookies.set("state" ,this.username);
 
       this.$router.push({name : 'home' });
     });

@@ -7,20 +7,20 @@
 
 
 <script>
+
   export default {
 
     data:function (){
       return{
-
-
-
         state :''
       }
     },
     created(){
-      if (window.localStorage.getItem('state')!=null)
-        this.state = window.localStorage.getItem('state');
+      //this.$cookies.set('state' ,'',);
 
+      if (this.$cookies.get("state" ))
+        this.state = this.$cookies.get("state");
+        
 
       console.log(window.location.href);
       if (window.location.href.length < 16){
