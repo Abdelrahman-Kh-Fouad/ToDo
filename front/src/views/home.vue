@@ -69,7 +69,7 @@ import Todolist from '../components/Todolist.vue'
 import axios from 'axios'
 
 export default {
-  name: 'App',
+  name: 'home',
   components: {
     Todolist
   },
@@ -120,7 +120,6 @@ export default {
 
       this.list.push({_id: this.currentId, text: this.currentTodo});
       this.currentTodo = '';
-      console.log(this.list);
     },
     Logout:function (){
       this.$root.state = '';
@@ -132,9 +131,6 @@ export default {
   }
 }
 
-    // .catch(err => {
-    //   console.log(err);
-    // }
 </script>
 
 <style>

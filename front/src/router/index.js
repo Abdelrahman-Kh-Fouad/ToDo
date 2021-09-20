@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import login from '../views/login.vue'
 import register from '../views/register.vue'
 import github from "@/views/github";
-import todo from "@/views/todo";
+import home from "@/views/home";
 import three_bot from "@/views/three_bot";
 
 const routes = [
@@ -26,10 +26,11 @@ const routes = [
     component: github
   }
   ,{
-    path : '/todo',
-    name : 'todo',
-    component: todo
-  },{
+    path : '/home',
+    name : 'home',
+    component: home
+  }
+  ,{
     path : '/three_bot',
     name : 'three_bot',
     component: three_bot

@@ -11,16 +11,29 @@
 
     data:function (){
       return{
+
+
+
         state :''
       }
     },
     created(){
-      //this.$router.push('github');
+      if (window.localStorage.getItem('state')!=null)
+        this.state = window.localStorage.getItem('state');
 
 
+      console.log(window.location.href);
+      if (window.location.href.length < 16){
+        if (this.$root.state == '') {
+          this.$router.push({name: 'login'});
+        }
+        else{
+          this.$router.push({name : 'home'});
+
+        }
+
+      }
     }
-    
-     
   }
 </script>>
 <!--<style>-->

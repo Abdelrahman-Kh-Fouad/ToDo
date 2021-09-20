@@ -21,7 +21,9 @@ export default {
       this.username = response.data;
       console.log(this.name)
       this.$root.state = this.username;
-      this.$router.push({name : 'todo'  });
+      window.localStorage.setItem('state' , this.username);
+
+      this.$router.push({name : 'home' });
     });
 
 

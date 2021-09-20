@@ -1,17 +1,17 @@
 <template>
- <div class="login-page">
-  <div class="form">
-
-    <form >
-      <button @click="Signin()"> <a style="color: white" href = 'https://github.com/login/oauth/authorize?client_id=4ebb67bce288c83e5459'>github</a></button>
-      <button @click="ThreeBot()"> <a style="color: white" :href=this.threeBotUrl>Three</a></button>
-
-    </form>
 
 
-
+  <div className="row m-1 p-4">
+    <div className="col">
+      <div className="p-1 h1 text-primary text-center mx-auto display-inline-block">
+        <button  className="btn btn-primary"
+                                   @click="Signin()"> <a style="color: white" href = 'https://github.com/login/oauth/authorize?client_id=4ebb67bce288c83e5459'>Login with github</a></button>
+        <button className="btn btn-primary"
+                                   @click="ThreeBot()"> <a style="color: white" :href=this.threeBotUrl>Login with threefold connect</a></button>
+      </div>
+    </div>
   </div>
-</div>
+
 </template>
 
 
@@ -53,10 +53,11 @@ export default {
 
   },
   created() {
+    if (this.$root.state != '')
+      this.$router.push({name : 'home'});
     this.ThreeBot();
+
   }
-
-
 }
 </script>
 
